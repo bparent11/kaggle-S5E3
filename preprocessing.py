@@ -6,8 +6,10 @@ def preprocess(file_name, test=False):
         fake_date_range = pd.date_range(start="01/01/2017", end="30-12-2022")
     else:
         fake_date_range = pd.date_range(start="01/01/2023", end="30-12-2024")
+    
+    target='rainfall'
 
-    df = pd.read_csv(file_name)
+    df = pd.read_csv(file_name, index_col=0)
 
     df['year'] = 0
     for i in range(6):
@@ -32,4 +34,13 @@ def preprocess(file_name, test=False):
     # Appliquer la fonction pour obtenir la saison
     df['season'] = df['month'].apply(get_season)
 
-    
+    df.drop(columns=['date'], inplace=True)
+
+    if test==True:
+        return df
+
+    X = df.drop(columns=[target])
+    y = df[target]
+
+    return X, y
+
